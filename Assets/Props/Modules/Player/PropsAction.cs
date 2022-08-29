@@ -164,15 +164,6 @@ namespace Props
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Zoom"",
-                    ""type"": ""Value"",
-                    ""id"": ""ba5f6100-e323-460c-bfb3-2db0a41b748f"",
-                    ""expectedControlType"": ""Delta"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -195,17 +186,6 @@ namespace Props
                     ""processors"": """",
                     ""groups"": ""Touch;Keyboard&Mouse"",
                     ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0fae00d3-ec10-42fa-b3ad-7898283c7605"",
-                    ""path"": ""<Mouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -797,7 +777,6 @@ namespace Props
             // Camera
             m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
             m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
-            m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -903,13 +882,11 @@ namespace Props
         private readonly InputActionMap m_Camera;
         private ICameraActions m_CameraActionsCallbackInterface;
         private readonly InputAction m_Camera_Look;
-        private readonly InputAction m_Camera_Zoom;
         public struct CameraActions
         {
             private @PropsAction m_Wrapper;
             public CameraActions(@PropsAction wrapper) { m_Wrapper = wrapper; }
             public InputAction @Look => m_Wrapper.m_Camera_Look;
-            public InputAction @Zoom => m_Wrapper.m_Camera_Zoom;
             public InputActionMap Get() { return m_Wrapper.m_Camera; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -922,9 +899,6 @@ namespace Props
                     @Look.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnLook;
                     @Look.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnLook;
                     @Look.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnLook;
-                    @Zoom.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoom;
-                    @Zoom.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoom;
-                    @Zoom.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoom;
                 }
                 m_Wrapper.m_CameraActionsCallbackInterface = instance;
                 if (instance != null)
@@ -932,9 +906,6 @@ namespace Props
                     @Look.started += instance.OnLook;
                     @Look.performed += instance.OnLook;
                     @Look.canceled += instance.OnLook;
-                    @Zoom.started += instance.OnZoom;
-                    @Zoom.performed += instance.OnZoom;
-                    @Zoom.canceled += instance.OnZoom;
                 }
             }
         }
@@ -1096,7 +1067,6 @@ namespace Props
         public interface ICameraActions
         {
             void OnLook(InputAction.CallbackContext context);
-            void OnZoom(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
