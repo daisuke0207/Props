@@ -28,7 +28,9 @@ namespace Props.Player
         private void OnMove(InputAction.CallbackContext context)
         { 
             var input = context.ReadValue<Vector2>();
-            _moveInput = new Vector3(input.x, 0, input.y);
+            if (Camera.main == null) return;
+            var cameraAngleAxis = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+            _moveInput = cameraAngleAxis * new Vector3(input.x, 0, input.y);
         }
 
         private void FixedUpdate()
