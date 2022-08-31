@@ -164,6 +164,15 @@ namespace Props
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Switch"",
+                    ""type"": ""Button"",
+                    ""id"": ""e732184d-8191-4efb-b136-56222c77dd25"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -186,6 +195,17 @@ namespace Props
                     ""processors"": """",
                     ""groups"": ""Touch;Keyboard&Mouse"",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e83022f-e75b-4dd8-aa4c-2437f0b58e77"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -777,6 +797,7 @@ namespace Props
             // Camera
             m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
             m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
+            m_Camera_Switch = m_Camera.FindAction("Switch", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -882,11 +903,13 @@ namespace Props
         private readonly InputActionMap m_Camera;
         private ICameraActions m_CameraActionsCallbackInterface;
         private readonly InputAction m_Camera_Look;
+        private readonly InputAction m_Camera_Switch;
         public struct CameraActions
         {
             private @PropsAction m_Wrapper;
             public CameraActions(@PropsAction wrapper) { m_Wrapper = wrapper; }
             public InputAction @Look => m_Wrapper.m_Camera_Look;
+            public InputAction @Switch => m_Wrapper.m_Camera_Switch;
             public InputActionMap Get() { return m_Wrapper.m_Camera; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -899,6 +922,9 @@ namespace Props
                     @Look.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnLook;
                     @Look.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnLook;
                     @Look.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnLook;
+                    @Switch.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnSwitch;
+                    @Switch.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnSwitch;
+                    @Switch.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnSwitch;
                 }
                 m_Wrapper.m_CameraActionsCallbackInterface = instance;
                 if (instance != null)
@@ -906,6 +932,9 @@ namespace Props
                     @Look.started += instance.OnLook;
                     @Look.performed += instance.OnLook;
                     @Look.canceled += instance.OnLook;
+                    @Switch.started += instance.OnSwitch;
+                    @Switch.performed += instance.OnSwitch;
+                    @Switch.canceled += instance.OnSwitch;
                 }
             }
         }
@@ -1067,6 +1096,7 @@ namespace Props
         public interface ICameraActions
         {
             void OnLook(InputAction.CallbackContext context);
+            void OnSwitch(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
